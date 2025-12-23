@@ -1,0 +1,120 @@
+.profile-container {
+  min-height: 100%;
+}
+
+.profile-section {
+  padding: 0;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.2);
+}
+
+.profile-header .ant-avatar {
+  margin-right: 20px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-basic-info {
+  color: #fff;
+}
+
+.profile-basic-info h3 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.profile-basic-info .ant-tag {
+  margin-top: 0;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+}
+
+/* iOS风格描述列表 */
+.profile-section .ant-descriptions {
+  background: transparent;
+}
+
+.profile-section .ant-descriptions-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+
+.profile-section .ant-descriptions-item-label {
+  color: #8E8E93;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 12px 0;
+}
+
+.profile-section .ant-descriptions-item-content {
+  color: #000000;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 0;
+}
+
+.profile-section .ant-descriptions-bordered .ant-descriptions-item-label,
+.profile-section .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+/* iOS风格表单 */
+.profile-section .ant-input,
+.profile-section .ant-input-password {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 16px;
+  font-size: 17px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-section .ant-input:focus,
+.profile-section .ant-input-password:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.profile-section .ant-btn-primary {
+  border-radius: 12px;
+  height: 44px;
+  font-size: 17px;
+  font-weight: 600;
+  background: #007AFF;
+  border: none;
+  padding: 0 24px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-section .ant-btn-primary:hover {
+  background: #0051D5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.profile-section .ant-btn {
+  border-radius: 12px;
+  height: 44px;
+  font-size: 17px;
+  padding: 0 24px;
+}
+
+
+

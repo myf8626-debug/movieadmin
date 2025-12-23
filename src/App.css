@@ -1,0 +1,55 @@
+.app-container {
+  min-height: 100vh;
+  background-color: #F2F2F7;
+}
+
+.content-container {
+  padding: 20px;
+  background: #F2F2F7;
+  min-height: calc(100vh - 64px);
+}
+
+.page-header {
+  background: transparent;
+  padding: 0 0 16px 0;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 0;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+
+.page-content {
+  background: #FFFFFF;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+}
+
+/* iOS风格卡片 */
+.ios-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+
+
+
+
+
+
+

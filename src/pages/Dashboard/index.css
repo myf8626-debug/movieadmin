@@ -1,0 +1,159 @@
+.dashboard-container {
+  min-height: 100%;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.2);
+}
+
+.welcome-card .ant-card-body {
+  padding: 32px;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.welcome-content .ant-avatar {
+  margin-right: 20px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-text h2 {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.welcome-text p {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* iOS风格统计卡片 */
+.dashboard-container .ant-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.dashboard-container .ant-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.dashboard-container .ant-statistic-title {
+  color: #8E8E93;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.dashboard-container .ant-statistic-content {
+  color: #000000;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.quick-actions-card .ant-card-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 20px 20px 0 20px;
+}
+
+.quick-actions-card .ant-card-head-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.3px;
+}
+
+.system-info-card .ant-card-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 20px 20px 0 20px;
+}
+
+.system-info-card .ant-card-head-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.3px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.action-item {
+  text-align: center;
+  padding: 24px 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.action-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.action-item > div:last-child {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.system-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background 0.2s;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 8px;
+}
+
+.info-label {
+  font-weight: 500;
+  margin-right: 12px;
+  min-width: 100px;
+  color: #8E8E93;
+  font-size: 15px;
+}
+
+
+

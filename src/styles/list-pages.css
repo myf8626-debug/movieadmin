@@ -1,0 +1,73 @@
+/* 列表页面iOS风格 */
+
+/* 搜索栏 */
+.list-search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.list-search-bar .ant-input {
+  flex: 1;
+  min-width: 200px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 16px;
+  font-size: 17px;
+}
+
+.list-search-bar .ant-select {
+  min-width: 150px;
+}
+
+.list-search-bar .ant-btn {
+  border-radius: 12px;
+  height: 44px;
+  padding: 0 20px;
+  font-weight: 600;
+}
+
+/* 操作按钮 */
+.list-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.list-actions .ant-btn-primary {
+  border-radius: 12px;
+  height: 44px;
+  padding: 0 24px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+}
+
+/* 表格容器 */
+.table-container {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+/* 空状态 */
+.ant-empty {
+  padding: 40px 20px;
+}
+
+.ant-empty-description {
+  color: #8E8E93;
+  font-size: 15px;
+}
+
+
+
+
+
+
+

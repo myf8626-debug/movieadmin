@@ -1,0 +1,130 @@
+.app-layout {
+  min-height: 100vh;
+  background-color: #F2F2F7;
+}
+
+/* iOS风格侧边栏 */
+.app-layout .ant-layout-sider {
+  background: #FFFFFF !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+}
+
+.app-layout .ant-layout-sider-light {
+  background: #FFFFFF !important;
+}
+
+.app-layout .ant-menu {
+  background: #FFFFFF !important;
+  border-right: none;
+  padding: 12px;
+}
+
+.app-layout .ant-menu-item {
+  color: #000000 !important;
+  border-radius: 12px;
+  margin: 4px 0;
+  height: 48px;
+  line-height: 48px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.app-layout .ant-menu-item:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #000000 !important;
+}
+
+.app-layout .ant-menu-item-selected {
+  background: rgba(0, 122, 255, 0.1) !important;
+  color: #007AFF !important;
+  font-weight: 600;
+}
+
+.app-layout .ant-menu-item-selected::after {
+  display: none;
+}
+
+.app-layout .ant-menu-item-icon {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.logo {
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  color: #000000;
+  font-size: 20px;
+  font-weight: 700;
+  background: transparent;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0 20px;
+  letter-spacing: -0.5px;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.trigger {
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #000000;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.trigger:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #007AFF;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-info:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.username {
+  margin-left: 8px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.content {
+  margin: 20px;
+  padding: 0;
+  background: #F2F2F7;
+  min-height: calc(100vh - 88px);
+}
+
+
+
+
+
+
+
+

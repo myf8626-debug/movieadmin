@@ -1,0 +1,318 @@
+/* iOS风格全局样式覆盖 */
+
+/* Ant Design组件iOS风格化 */
+
+/* 按钮 */
+.ant-btn {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.ant-btn-primary {
+  background: #007AFF;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+}
+
+.ant-btn-primary:hover {
+  background: #0051D5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.ant-btn-default {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000000;
+}
+
+.ant-btn-default:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: transparent;
+}
+
+.ant-btn-link {
+  color: #007AFF;
+  font-weight: 500;
+}
+
+.ant-btn-link:hover {
+  color: #0051D5;
+}
+
+.ant-btn-dangerous {
+  color: #FF3B30;
+}
+
+.ant-btn-dangerous:hover {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: transparent;
+}
+
+/* 输入框 */
+.ant-input,
+.ant-input-password,
+.ant-input-number,
+.ant-picker {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 17px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-input:focus,
+.ant-input-password:focus,
+.ant-input-focused,
+.ant-input-password-focused,
+.ant-picker-focused {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ant-input:hover,
+.ant-input-password:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 表格 */
+.ant-table {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 15px;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.ant-table-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/* 卡片 */
+.ant-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ant-card-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 20px 20px 0 20px;
+}
+
+.ant-card-head-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.3px;
+}
+
+.ant-card-body {
+  padding: 20px;
+}
+
+/* 标签 */
+.ant-tag {
+  border-radius: 12px;
+  border: none;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 分页 */
+.ant-pagination {
+  margin-top: 24px;
+}
+
+.ant-pagination-item {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ant-pagination-item-active {
+  background: #007AFF;
+  border-color: #007AFF;
+}
+
+.ant-pagination-item-active a {
+  color: #FFFFFF;
+}
+
+/* 模态框 */
+.ant-modal {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ant-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ant-modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 24px 24px 20px 24px;
+}
+
+.ant-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.3px;
+}
+
+.ant-modal-body {
+  padding: 24px;
+}
+
+.ant-modal-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 16px 24px;
+}
+
+/* 选择器 */
+.ant-select {
+  border-radius: 12px;
+}
+
+.ant-select-selector {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: #007AFF !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1) !important;
+}
+
+/* Tabs */
+.ant-tabs {
+  color: #000000;
+}
+
+.ant-tabs-tab {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.ant-tabs-tab:hover {
+  color: #007AFF;
+}
+
+.ant-tabs-tab-active {
+  font-weight: 600;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #007AFF;
+}
+
+.ant-tabs-ink-bar {
+  background: #007AFF;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* 表单 */
+.ant-form-item-label > label {
+  font-weight: 500;
+  color: #000000;
+  font-size: 15px;
+}
+
+.ant-form-item {
+  margin-bottom: 20px;
+}
+
+/* 消息提示 */
+.ant-message {
+  top: 20px;
+}
+
+.ant-message-notice-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 12px 20px;
+}
+
+/* 确认框 */
+.ant-popconfirm {
+  border-radius: 12px;
+}
+
+.ant-popover-inner {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 下拉菜单 */
+.ant-dropdown-menu {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+}
+
+.ant-dropdown-menu-item {
+  border-radius: 8px;
+  padding: 10px 16px;
+  transition: all 0.2s;
+}
+
+.ant-dropdown-menu-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 日期选择器 */
+.ant-picker {
+  border-radius: 12px;
+}
+
+.ant-picker-dropdown {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 数字输入框 */
+.ant-input-number {
+  border-radius: 12px;
+}
+
+.ant-input-number-focused {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+/* 文本域 */
+.ant-input {
+  border-radius: 12px;
+}
+
+textarea.ant-input {
+  border-radius: 12px;
+  min-height: 100px;
+}
+
+
+
+
+
+
+
