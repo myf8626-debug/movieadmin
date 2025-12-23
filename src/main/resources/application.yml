@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: movie-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/movie_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Myf060724@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: INFO
+    com.movie: DEBUG
+
+jwt:
+  secret: movie-backend-secret-key-2024
+  expiration: 86400000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
