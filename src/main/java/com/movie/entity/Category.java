@@ -18,6 +18,12 @@ public class Category {
     @Column(length = 200)
     private String description;
 
+    @Column(name = "icon", length = 100)
+    private String icon; // 图标名称，例如 'HomeOutlined'
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0; // 排序权重，默认0
+
     @Column(name = "create_time")
     private LocalDateTime createTime;
 

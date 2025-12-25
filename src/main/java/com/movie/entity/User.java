@@ -27,6 +27,9 @@ public class User {
     @Column(length = 20)
     private String role = "USER"; // ADMIN, VIP, USER
 
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl; // 头像URL
+
     @Column(name = "create_time")
     private LocalDateTime createTime;
 

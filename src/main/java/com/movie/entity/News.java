@@ -21,8 +21,17 @@ public class News {
     @Column(length = 500)
     private String summary;
 
-    @Column(length = 200)
-    private String coverImage;
+    @Column(name = "cover_image", length = 500)
+    private String coverImage; // 封面图URL
+
+    @Column(name = "author", length = 50)
+    private String author; // 作者名称
+
+    @Column(name = "status")
+    private Integer status = 0; // 状态：1=已发布, 0=草稿
+
+    @Column(name = "is_top")
+    private Integer isTop = 0; // 是否置顶：1=置顶, 0=普通
 
     @Column(name = "view_count")
     private Integer viewCount = 0;
@@ -35,7 +44,7 @@ public class News {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User author;
+    private User user; // 创建者用户（保留原有关联）
 
     @PrePersist
     protected void onCreate() {

@@ -14,7 +14,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllOrderBySortOrderAndCreateTime();
     }
 
     public Category getCategoryById(Long id) {
@@ -25,6 +25,10 @@ public class CategoryService {
     public Category createCategory(Category category) {
         if (categoryRepository.existsByName(category.getName())) {
             throw new RuntimeException("分类名称已存在");
+        }
+        // 设置默认值
+        if (category.getSortOrder() == null) {
+            category.setSortOrder(0);
         }
         return categoryRepository.save(category);
     }
@@ -38,6 +42,8 @@ public class CategoryService {
         }
         existingCategory.setName(category.getName());
         existingCategory.setDescription(category.getDescription());
+        existingCategory.setIcon(category.getIcon());
+        existingCategory.setSortOrder(category.getSortOrder() != null ? category.getSortOrder() : 0);
         return categoryRepository.save(existingCategory);
     }
 

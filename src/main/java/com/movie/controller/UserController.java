@@ -3,12 +3,17 @@ package com.movie.controller;
 import com.movie.dto.ApiResponse;
 import com.movie.dto.ChangePasswordRequest;
 import com.movie.dto.UpdateUserInfoRequest;
+import com.movie.dto.UserVO;
 import com.movie.entity.User;
 import com.movie.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -18,13 +23,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/info")
-    public ApiResponse<User> getCurrentUserInfo(HttpServletRequest request) {
+    public ApiResponse<UserVO> getCurrentUserInfo(HttpServletRequest request) {
         try {
             String username = (String) request.getAttribute("username");
-            User user = userService.getCurrentUser(username);
-            // 不返回密码
-            user.setPassword(null);
-            return ApiResponse.success(user);
+            UserVO userVO = userService.getCurrentUserWithStats(username);
+            return ApiResponse.success(userVO);
         } catch (Exception e) {
             return ApiResponse.error(e.getMessage());
         }
@@ -70,6 +73,38 @@ public class UserController {
             return ApiResponse.success("密码修改成功", null);
         } catch (Exception e) {
             return ApiResponse.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 上传用户头像
+     * @param file 头像文件
+     * @param request HTTP请求
+     * @return 包含新头像URL的响应
+     */
+    @PostMapping("/avatar")
+    public ApiResponse<Map<String, String>> uploadAvatar(
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) {
+        try {
+            String username = (String) request.getAttribute("username");
+            
+            if (file == null || file.isEmpty()) {
+                return ApiResponse.error("请选择要上传的文件");
+            }
+            
+            User updatedUser = userService.updateAvatar(username, file);
+            
+            Map<String, String> result = new HashMap<>();
+            result.put("avatarUrl", updatedUser.getAvatarUrl());
+            
+            return ApiResponse.success("头像上传成功", result);
+        } catch (IllegalArgumentException e) {
+            return ApiResponse.error(e.getMessage());
+        } catch (IOException e) {
+            return ApiResponse.error("文件上传失败: " + e.getMessage());
+        } catch (Exception e) {
+            return ApiResponse.error("上传失败: " + e.getMessage());
         }
     }
 }

@@ -1,0 +1,42 @@
+.upload-modal .upload-modal-content {
+  padding: 8px 0;
+}
+
+.upload-section {
+  margin-bottom: 24px;
+}
+
+.upload-file-info {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.upload-progress {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.upload-progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.metadata-section {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .upload-modal {
+    width: 95% !important;
+  }
+}
+
+

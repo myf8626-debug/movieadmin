@@ -5,15 +5,24 @@ import com.movie.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.Optional;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public void run(String... args) {
+        // 首先测试数据库连接
+        testDatabaseConnection();
+        
         try {
             // 初始化默认管理员账号
             Optional<User> existingUser = userRepository.findByUsername("movieadmin");
@@ -57,8 +66,43 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("✓ VIP用户示例已创建: vipuser / vip123456");
             }
         } catch (Exception e) {
-            System.err.println("初始化用户账号失败: " + e.getMessage());
+            System.err.println("========================================");
+            System.err.println("✗ 初始化用户账号失败");
+            System.err.println("错误信息: " + e.getMessage());
+            System.err.println("========================================");
             e.printStackTrace();
+        }
+    }
+    
+    private void testDatabaseConnection() {
+        try {
+            System.out.println("========================================");
+            System.out.println("正在测试数据库连接...");
+            Connection connection = dataSource.getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            System.out.println("✓ 数据库连接成功！");
+            System.out.println("  数据库产品: " + metaData.getDatabaseProductName());
+            System.out.println("  数据库版本: " + metaData.getDatabaseProductVersion());
+            System.out.println("  驱动名称: " + metaData.getDriverName());
+            System.out.println("  驱动版本: " + metaData.getDriverVersion());
+            System.out.println("  URL: " + metaData.getURL());
+            System.out.println("========================================");
+            connection.close();
+        } catch (Exception e) {
+            System.err.println("========================================");
+            System.err.println("✗ 数据库连接失败！");
+            System.err.println("错误信息: " + e.getMessage());
+            System.err.println("");
+            System.err.println("请检查以下配置：");
+            System.err.println("1. MySQL服务是否已启动");
+            System.err.println("2. 数据库 'movie_db' 是否存在");
+            System.err.println("3. application.yml 中的数据库配置是否正确：");
+            System.err.println("   - URL: jdbc:mysql://localhost:3306/movie_db");
+            System.err.println("   - 用户名和密码是否正确");
+            System.err.println("4. 数据库用户是否有足够的权限");
+            System.err.println("========================================");
+            e.printStackTrace();
+            throw new RuntimeException("数据库连接失败，应用无法启动", e);
         }
     }
 }

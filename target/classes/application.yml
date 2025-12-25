@@ -2,10 +2,17 @@ spring:
   application:
     name: movie-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/movie_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: Myf060724@
+    url: jdbc:mysql://localhost:3306/movie_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&rewriteBatchedStatements=true
+    username: root  
+    password: 359742
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,6 +21,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+        connection:
+          provider_disables_autocommit: false
   servlet:
     multipart:
       max-file-size: 100MB
@@ -28,10 +37,20 @@ logging:
   level:
     root: INFO
     com.movie: DEBUG
+    org.springframework.jdbc: DEBUG
+    com.zaxxer.hikari: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 jwt:
   secret: movie-backend-secret-key-2024
   expiration: 86400000
+
+# 文件上传配置
+file:
+  upload:
+    dir: uploads  # 文件上传目录（相对于项目根目录）
+    url-prefix: /api/uploads  # 文件访问URL前缀
 
 
 
