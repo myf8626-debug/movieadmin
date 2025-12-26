@@ -25,13 +25,21 @@ spring:
           provider_disables_autocommit: false
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 500MB  # 单个文件最大大小
+      max-request-size: 500MB  # 整个请求最大大小
+      enabled: true
+      file-size-threshold: 0
+      location: ${java.io.tmpdir}
 
 server:
   port: 8080
   servlet:
     context-path: /api
+  # 增加超时时间以支持大文件上传
+  connection-timeout: 3600000  # 1小时（毫秒）
+  tomcat:
+    connection-timeout: 3600000
+    max-http-post-size: 10737418240  # 10GB
 
 logging:
   level:
@@ -51,6 +59,8 @@ file:
   upload:
     dir: uploads  # 文件上传目录（相对于项目根目录）
     url-prefix: /api/uploads  # 文件访问URL前缀
+    files-dir: D:/project/movie-uploads  # 文件上传目录（绝对路径，用于 /files/** 映射）
+    simple-dir: D:/movie_uploads  # 简单上传接口的目录（用于 POST /api/upload）
 
 
 
