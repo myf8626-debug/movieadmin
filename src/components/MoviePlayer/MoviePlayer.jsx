@@ -23,6 +23,7 @@ const MoviePlayer = ({
   const [hasError, setHasError] = useState(false);
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const storageKey = movieId ? `movie_playback_${movieId}` : null;
+  const loadingTimeoutRef = useRef(null);
 
   // 从 localStorage 恢复播放进度
   const restorePlaybackPosition = () => {
@@ -74,6 +75,11 @@ const MoviePlayer = ({
 
   // 处理播放器准备就绪
   const handleReady = () => {
+    console.log('播放器准备就绪，视频URL:', src);
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
     setIsReady(true);
     setIsLoading(false);
     setHasError(false);
@@ -123,7 +129,14 @@ const MoviePlayer = ({
 
   // 处理错误
   const handleError = (error) => {
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
     console.error('播放器错误:', error);
+    console.error('视频URL:', src);
+    console.error('错误类型:', error?.type);
+    console.error('错误详情:', error);
     setHasError(true);
     setIsLoading(false);
   };
@@ -138,6 +151,34 @@ const MoviePlayer = ({
 
   // 判断是否为 HLS 流
   const isHLS = src && (src.endsWith('.m3u8') || src.includes('.m3u8'));
+
+  // 设置加载超时（30秒）
+  useEffect(() => {
+    if (src && isLoading) {
+      loadingTimeoutRef.current = setTimeout(() => {
+        if (isLoading) {
+          console.warn('视频加载超时:', src);
+          setHasError(true);
+          setIsLoading(false);
+        }
+      }, 30000); // 30秒超时
+    }
+
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+        loadingTimeoutRef.current = null;
+      }
+    };
+  }, [src, isLoading]);
+
+  // 当src变化时重置状态
+  useEffect(() => {
+    setIsReady(false);
+    setIsLoading(true);
+    setHasError(false);
+    setPlayedSeconds(0);
+  }, [src]);
 
   return (
     <div className="movie-player-container">
@@ -168,18 +209,37 @@ const MoviePlayer = ({
           onProgress={handleProgress}
           onError={handleError}
           onEnded={handleEnded}
-          onStart={() => setIsLoading(false)}
+          onStart={() => {
+            console.log('视频开始播放');
+            setIsLoading(false);
+          }}
+          onBuffer={() => {
+            console.log('视频缓冲中...');
+          }}
+          onBufferEnd={() => {
+            console.log('视频缓冲完成');
+            setIsLoading(false);
+          }}
           config={{
             file: {
               attributes: {
                 controlsList: 'nodownload',
                 playsInline: true,
+                crossOrigin: 'anonymous',
+                preload: 'auto',
               },
               hlsOptions: {
                 // HLS.js 配置选项
                 enableWorker: true,
                 lowLatencyMode: false,
+                xhrSetup: (xhr, url) => {
+                  // 允许跨域请求
+                  xhr.withCredentials = false;
+                },
               },
+              forceVideo: true,
+              forceHLS: false,
+              forceDASH: false,
             },
           }}
           style={{

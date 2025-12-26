@@ -17,30 +17,36 @@
 }
 
 .login-card .ant-card-head {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 24px 24px 0 24px;
-}
-
-.login-card .ant-card-head-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #000000;
-  text-align: center;
-  letter-spacing: -0.5px;
+  border-bottom: none;
+  padding: 0;
 }
 
 .login-card .ant-card-body {
   padding: 32px 24px 24px 24px;
 }
 
-.login-tip {
-  margin-top: 20px;
-  text-align: center;
-  color: #8E8E93;
-  font-size: 13px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 12px;
+/* 标签页样式 */
+.login-card .ant-tabs {
+  margin-top: -8px;
+}
+
+.login-card .ant-tabs-tab {
+  font-size: 17px;
+  font-weight: 600;
+  padding: 12px 24px;
+}
+
+.login-card .ant-tabs-tab-active {
+  color: #007AFF;
+}
+
+.login-card .ant-tabs-ink-bar {
+  background: #007AFF;
+  height: 3px;
+}
+
+.login-card .ant-tabs-content-holder {
+  margin-top: 24px;
 }
 
 /* iOS风格输入框 */

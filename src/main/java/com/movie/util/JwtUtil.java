@@ -16,15 +16,28 @@ public class JwtUtil {
     private Long expiration;
 
     public String generateToken(String username) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                throw new IllegalArgumentException("用户名不能为空");
+            }
+            if (secret == null || secret.isEmpty()) {
+                throw new IllegalStateException("JWT密钥未配置");
+            }
+            
+            Date now = new Date();
+            Date expiryDate = new Date(now.getTime() + expiration);
 
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
+            return Jwts.builder()
+                    .setSubject(username)
+                    .setIssuedAt(now)
+                    .setExpiration(expiryDate)
+                    .signWith(SignatureAlgorithm.HS512, secret)
+                    .compact();
+        } catch (Exception e) {
+            System.err.println("生成Token失败: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("生成Token失败: " + e.getMessage(), e);
+        }
     }
 
     public String getUsernameFromToken(String token) {

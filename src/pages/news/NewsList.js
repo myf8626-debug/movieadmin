@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Input, Space, Popconfirm, message, Tag } from 'antd';
+import { Table, Button, Input, Space, Popconfirm, message, Tag, Badge, Image, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getNewsList, deleteNews } from '../../utils/api';
 import dayjs from 'dayjs';
 import '../../styles/list-pages.css';
+
+const { Option } = Select;
 
 const NewsList = () => {
   const [data, setData] = useState([]);
@@ -15,26 +17,59 @@ const NewsList = () => {
     total: 0,
   });
   const [keyword, setKeyword] = useState('');
+  const [statusFilter, setStatusFilter] = useState(undefined); // undefined=全部, 1=已发布, 0=草稿
   const navigate = useNavigate();
 
-  const fetchData = async (page = 1, searchKeyword = '') => {
+  const fetchData = async (page = 1, searchKeyword = '', status = null) => {
     setLoading(true);
     try {
-      const response = await getNewsList({
+      const params = {
         page: page - 1,
         size: pagination.pageSize,
-        keyword: searchKeyword,
-      });
-      if (response.code === 200) {
-        setData(response.data.content);
+      };
+      if (searchKeyword && searchKeyword.trim() !== '') {
+        params.keyword = searchKeyword.trim();
+      }
+      if (status !== null && status !== undefined && status !== '') {
+        // 强制转换为数字类型，只接受 0 或 1
+        let statusNum;
+        if (typeof status === 'string') {
+          // 处理字符串类型
+          if (status === 'PUBLISHED' || status === '1') {
+            statusNum = 1;
+          } else if (status === 'DRAFT' || status === '0') {
+            statusNum = 0;
+          } else {
+            statusNum = parseInt(status, 10);
+          }
+        } else {
+          statusNum = Number(status);
+        }
+        if (!isNaN(statusNum) && (statusNum === 0 || statusNum === 1)) {
+          params.status = statusNum;
+        } else {
+          // 如果转换失败或值无效，不添加 status 参数
+          console.warn('Invalid status value:', status);
+        }
+      }
+      const response = await getNewsList(params);
+      if (response && response.code === 200) {
+        // 按ID从小到大排序
+        const sortedData = [...(response.data?.content || [])].sort((a, b) => {
+          return (a.id || 0) - (b.id || 0);
+        });
+        setData(sortedData);
         setPagination({
           ...pagination,
           current: page,
-          total: response.data.totalElements,
+          total: response.data?.totalElements || 0,
         });
+      } else {
+        message.error(response?.message || '获取新闻列表失败');
       }
     } catch (error) {
-      message.error('获取新闻列表失败');
+      console.error('获取新闻列表失败:', error);
+      message.error(error.response?.data?.message || error.message || '获取新闻列表失败');
     } finally {
       setLoading(false);
     }
@@ -45,14 +80,41 @@ const NewsList = () => {
   }, []);
 
   const handleSearch = () => {
-    fetchData(1, keyword);
+    fetchData(1, keyword, statusFilter);
+  };
+
+  const handleStatusFilterChange = (value) => {
+    // 确保值是数字类型或 undefined
+    let statusValue = undefined;
+    if (value !== undefined && value !== null && value !== '') {
+      // 强制转换为数字，处理字符串 "0"、"1" 或数字 0、1
+      let numValue;
+      if (typeof value === 'string') {
+        // 如果是字符串，先尝试解析
+        if (value === 'PUBLISHED' || value === '1') {
+          numValue = 1;
+        } else if (value === 'DRAFT' || value === '0') {
+          numValue = 0;
+        } else {
+          numValue = parseInt(value, 10);
+        }
+      } else {
+        numValue = Number(value);
+      }
+      // 只接受 0 或 1
+      if (!isNaN(numValue) && (numValue === 0 || numValue === 1)) {
+        statusValue = numValue;
+      }
+    }
+    setStatusFilter(statusValue);
+    fetchData(1, keyword, statusValue);
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteNews(id);
       message.success('删除成功');
-      fetchData(pagination.current, keyword);
+      fetchData(pagination.current, keyword, statusFilter);
     } catch (error) {
       message.error('删除失败');
     }
@@ -70,6 +132,37 @@ const NewsList = () => {
       dataIndex: 'title',
       key: 'title',
       ellipsis: true,
+      render: (text, record) => {
+        return (
+          <Space>
+            {record.isTop === 1 && (
+              <Tag color="red" style={{ margin: 0 }}>[置顶]</Tag>
+            )}
+            <span>{text}</span>
+          </Space>
+        );
+      },
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: 100,
+      align: 'center',
+      render: (status) => {
+        return status === 1 ? (
+          <Badge status="success" text="已发布" />
+        ) : (
+          <Badge status="default" text="草稿" />
+        );
+      },
+    },
+    {
+      title: '作者',
+      dataIndex: 'author',
+      key: 'author',
+      width: 120,
+      render: (author) => author || '-',
     },
     {
       title: '摘要',
@@ -82,6 +175,7 @@ const NewsList = () => {
       dataIndex: 'viewCount',
       key: 'viewCount',
       width: 100,
+      align: 'center',
     },
     {
       title: '创建时间',
@@ -132,6 +226,17 @@ const NewsList = () => {
               prefix={<SearchOutlined style={{ color: '#8E8E93' }} />}
               style={{ maxWidth: 400 }}
             />
+            <Select
+              placeholder="状态筛选"
+              allowClear
+              style={{ width: 120 }}
+              value={statusFilter}
+              onChange={handleStatusFilterChange}
+            >
+              <Option value={undefined}>全部</Option>
+              <Option value={1}>已发布</Option>
+              <Option value={0}>草稿</Option>
+            </Select>
             <Button type="primary" icon={<SearchOutlined />} onClick={handleSearch}>
               搜索
             </Button>
@@ -157,7 +262,7 @@ const NewsList = () => {
             showQuickJumper: true,
           }}
           onChange={(pagination) => {
-            fetchData(pagination.current, keyword);
+            fetchData(pagination.current, keyword, statusFilter);
           }}
         />
         </div>

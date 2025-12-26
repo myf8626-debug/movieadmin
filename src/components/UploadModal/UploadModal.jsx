@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Progress, Form, Input, Button, message, Upload, Space } from 'antd';
-import { InboxOutlined, CloseOutlined } from '@ant-design/icons';
+import { InboxOutlined, CloseOutlined, PauseOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useVideoUpload } from '../../hooks/useVideoUpload';
 import './UploadModal.css';
 
@@ -16,13 +16,16 @@ const UploadModal = ({
   onCancel,
   onSuccess,
   categoryId,
+  movieId = null, // 如果提供 movieId，则为编辑模式（为已有电影上传视频）
+  movieTitle = null, // 已有电影的标题
 }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
   const [currentFile, setCurrentFile] = useState(null);
+  const isEditMode = movieId !== null; // 是否为编辑模式
 
-  const { upload, progress, isUploading, cancel } = useVideoUpload({
+  const { upload, progress, isUploading, isPaused, pause, resume, cancel } = useVideoUpload({
     onProgress: (progressData) => {
       // 进度更新时的回调
       console.log(`上传进度: ${progressData.percentage}%`);
@@ -43,8 +46,11 @@ const UploadModal = ({
       setFileList([]);
       setUploadedFileUrl(null);
       setCurrentFile(null);
+    } else if (isEditMode && movieTitle) {
+      // 编辑模式下，预填充电影标题
+      form.setFieldsValue({ title: movieTitle });
     }
-  }, [visible, form]);
+  }, [visible, form, isEditMode, movieTitle]);
 
   // 处理文件选择
   const handleFileChange = (info) => {
@@ -76,9 +82,32 @@ const UploadModal = ({
         }
 
         setCurrentFile(file);
-        // 自动填充标题（使用文件名，去除扩展名）
-        const fileName = file.name.replace(/\.[^/.]+$/, '');
-        form.setFieldsValue({ title: fileName });
+        
+        // 检查是否有未完成的上传任务（相同文件名和大小）
+        const savedProgress = Object.keys(localStorage)
+          .filter(key => key.startsWith('upload_progress_'))
+          .map(key => {
+            try {
+              const data = JSON.parse(localStorage.getItem(key));
+              if (data.fileName === file.name && data.fileSize === file.size) {
+                return { key, data };
+              }
+            } catch (e) {
+              return null;
+            }
+            return null;
+          })
+          .find(item => item && item.data);
+        
+        if (savedProgress) {
+          message.info(`检测到未完成的上传任务，已上传 ${savedProgress.data.uploadedChunks?.length || 0} 个分片，可以继续上传`);
+        }
+        
+        // 如果不是编辑模式，自动填充标题（使用文件名，去除扩展名）
+        if (!isEditMode) {
+          const fileName = file.name.replace(/\.[^/.]+$/, '');
+          form.setFieldsValue({ title: fileName });
+        }
       }
     } else {
       setCurrentFile(null);
@@ -92,18 +121,56 @@ const UploadModal = ({
       return;
     }
 
+    // 检查 token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      message.error('请先登录！');
+      return;
+    }
+
     try {
-      const fileUrl = await upload(currentFile);
+      // 检查是否有未完成的上传任务（相同文件名和大小）
+      const savedProgress = Object.keys(localStorage)
+        .filter(key => key.startsWith('upload_progress_'))
+        .map(key => {
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            if (data.fileName === currentFile.name && data.fileSize === currentFile.size) {
+              return { key, data };
+            }
+          } catch (e) {
+            return null;
+          }
+          return null;
+        })
+        .find(item => item && item.data);
+      
+      // 如果有未完成的上传，使用恢复上传
+      const fileUrl = savedProgress 
+        ? await upload(currentFile, savedProgress.data.uploadId)
+        : await upload(currentFile);
+        
       if (fileUrl) {
         setUploadedFileUrl(fileUrl);
         message.success('文件上传成功，请填写影片信息');
       }
     } catch (error) {
-      message.error(`上传失败: ${error.message}`);
+      const errorMessage = error.message || '上传失败';
+      // 如果是暂停，不显示错误消息
+      if (errorMessage !== '上传已暂停') {
+        message.error(`上传失败: ${errorMessage}`);
+      }
+      
+      // 如果是认证错误，跳转到登录页
+      if (errorMessage.includes('登录')) {
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
+      }
     }
   };
 
-  // 提交表单（创建影片记录）
+  // 提交表单（创建影片记录或更新视频URL）
   const handleSubmit = async () => {
     if (!uploadedFileUrl) {
       message.warning('请先完成文件上传');
@@ -111,29 +178,64 @@ const UploadModal = ({
     }
 
     try {
-      const values = await form.validateFields();
-      onSuccess(uploadedFileUrl, {
-        title: values.title,
-        description: values.description,
-      });
-      message.success('影片创建成功！');
-      onCancel();
+      if (isEditMode) {
+        // 编辑模式：直接更新电影的视频URL
+        onSuccess(uploadedFileUrl, { movieId });
+        message.success('视频上传成功！');
+        onCancel();
+      } else {
+        // 创建模式：创建新影片
+        const values = await form.validateFields();
+        onSuccess(uploadedFileUrl, {
+          title: values.title,
+          description: values.description,
+        });
+        message.success('影片创建成功！');
+        onCancel();
+      }
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error('提交失败:', error);
     }
   };
 
   // 取消上传
   const handleCancelUpload = () => {
     cancel();
+    // 取消时清空文件列表和状态
     setFileList([]);
     setCurrentFile(null);
     setUploadedFileUrl(null);
   };
+  
+  // 检查是否有可恢复的上传任务
+  useEffect(() => {
+    if (visible && !isUploading && !isPaused && !currentFile) {
+      // 检查localStorage中是否有未完成的上传
+      const savedProgress = Object.keys(localStorage)
+        .filter(key => key.startsWith('upload_progress_'))
+        .map(key => {
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            // 检查是否过期（超过24小时）
+            if (data.timestamp && Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+              return { key, data };
+            }
+          } catch (e) {
+            return null;
+          }
+          return null;
+        })
+        .find(item => item && item.data);
+      
+      if (savedProgress) {
+        console.log('检测到未完成的上传任务:', savedProgress.data.fileName);
+      }
+    }
+  }, [visible, isUploading, isPaused, currentFile]);
 
   return (
     <Modal
-      title="上传影片"
+      title={isEditMode ? `为"${movieTitle || '影片'}"上传视频` : "上传影片"}
       open={visible}
       onCancel={onCancel}
       width={800}
@@ -183,25 +285,56 @@ const UploadModal = ({
               <div className="upload-progress">
                 <Progress
                   percent={progress.percentage}
-                  status="active"
+                  status={isPaused ? "exception" : "active"}
                   format={(percent) => `${percent}%`}
                 />
                 <div className="upload-progress-info">
                   <span>
-                    上传中: {progress.currentChunk} / {progress.totalChunks} 分片
+                    {isPaused ? '已暂停' : '上传中'}: {progress.currentChunk} / {progress.totalChunks} 分片
                   </span>
                   <span>
                     {((progress.uploaded / 1024 / 1024).toFixed(2))} MB /{' '}
                     {((progress.total / 1024 / 1024).toFixed(2))} MB
                   </span>
                 </div>
+                <Space style={{ marginTop: 12, width: '100%', justifyContent: 'center' }}>
+                  {!isPaused ? (
+                    <Button
+                      icon={<PauseOutlined />}
+                      onClick={pause}
+                    >
+                      暂停
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      icon={<PlayCircleOutlined />}
+                      onClick={resume}
+                    >
+                      继续上传
+                    </Button>
+                  )}
+                  <Button
+                    type="default"
+                    danger
+                    onClick={handleCancelUpload}
+                  >
+                    取消上传
+                  </Button>
+                </Space>
+              </div>
+            )}
+            
+            {isPaused && !isUploading && currentFile && (
+              <div style={{ marginTop: 16, textAlign: 'center' }}>
                 <Button
-                  type="default"
-                  danger
-                  onClick={handleCancelUpload}
-                  style={{ marginTop: 12 }}
+                  type="primary"
+                  size="large"
+                  icon={<PlayCircleOutlined />}
+                  onClick={resume}
+                  style={{ width: '100%' }}
                 >
-                  取消上传
+                  继续上传
                 </Button>
               </div>
             )}
@@ -219,8 +352,8 @@ const UploadModal = ({
           </div>
         )}
 
-        {/* 影片信息表单 */}
-        {uploadedFileUrl && (
+        {/* 影片信息表单（仅创建模式显示） */}
+        {uploadedFileUrl && !isEditMode && (
           <div className="metadata-section">
             <Form
               form={form}
@@ -269,6 +402,34 @@ const UploadModal = ({
                 </Space>
               </Form.Item>
             </Form>
+          </div>
+        )}
+
+        {/* 编辑模式：上传完成后直接完成 */}
+        {uploadedFileUrl && isEditMode && (
+          <div className="metadata-section" style={{ textAlign: 'center', padding: '20px 0' }}>
+            <p style={{ fontSize: '16px', marginBottom: '20px' }}>
+              视频上传成功！点击下方按钮完成更新。
+            </p>
+            <Space>
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleSubmit}
+              >
+                完成
+              </Button>
+              <Button
+                onClick={() => {
+                  setUploadedFileUrl(null);
+                  setFileList([]);
+                  setCurrentFile(null);
+                }}
+              >
+                重新上传
+              </Button>
+              <Button onClick={onCancel}>取消</Button>
+            </Space>
           </div>
         )}
       </div>

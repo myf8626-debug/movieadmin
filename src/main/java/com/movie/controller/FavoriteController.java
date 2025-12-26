@@ -24,21 +24,44 @@ public class FavoriteController {
     private FavoriteService favoriteService;
 
     @PostMapping("/toggle")
-    public ApiResponse<Map<String, Object>> toggleFavorite(@RequestBody Map<String, Long> request, HttpServletRequest httpRequest) {
+    public ApiResponse<Map<String, Object>> toggleFavorite(@RequestBody Map<String, Object> request, HttpServletRequest httpRequest) {
         try {
             String username = (String) httpRequest.getAttribute("username");
+            System.out.println("收藏切换接口 - username: " + username);
+            
             if (username == null) {
+                System.out.println("收藏切换接口 - 未登录");
                 return ApiResponse.error("未登录");
             }
-            Long movieId = request.get("movieId");
+            
+            // 处理 movieId 可能是 Long 或 Integer 的情况
+            Object movieIdObj = request.get("movieId");
+            Long movieId = null;
+            if (movieIdObj instanceof Long) {
+                movieId = (Long) movieIdObj;
+            } else if (movieIdObj instanceof Integer) {
+                movieId = ((Integer) movieIdObj).longValue();
+            } else if (movieIdObj instanceof Number) {
+                movieId = ((Number) movieIdObj).longValue();
+            } else if (movieIdObj != null) {
+                movieId = Long.parseLong(movieIdObj.toString());
+            }
+            
+            System.out.println("收藏切换接口 - movieId: " + movieId);
+            
             if (movieId == null) {
                 return ApiResponse.error("电影ID不能为空");
             }
+            
             boolean isFavorited = favoriteService.toggleFavorite(movieId, username);
+            System.out.println("收藏切换接口 - 操作结果 isFavorited: " + isFavorited);
+            
             Map<String, Object> result = new HashMap<>();
             result.put("isFavorited", isFavorited);
             return ApiResponse.success(isFavorited ? "收藏成功" : "取消收藏成功", result);
         } catch (Exception e) {
+            System.err.println("收藏切换接口 - 异常: " + e.getMessage());
+            e.printStackTrace();
             return ApiResponse.error(e.getMessage());
         }
     }

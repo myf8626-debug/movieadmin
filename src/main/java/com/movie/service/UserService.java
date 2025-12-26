@@ -62,9 +62,12 @@ public class UserService {
         System.out.println("生成Token: " + token.substring(0, Math.min(20, token.length())) + "...");
         System.out.println("================");
 
+        // 转换为 UserVO 避免序列化问题
+        UserVO userVO = UserVO.fromUser(user);
+        
         Map<String, Object> result = new HashMap<>();
         result.put("token", token);
-        result.put("user", user);
+        result.put("user", userVO);
         return result;
     }
 

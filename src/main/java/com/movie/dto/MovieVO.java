@@ -1,5 +1,6 @@
 package com.movie.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movie.entity.Movie;
 import lombok.Data;
 import java.time.LocalDate;
@@ -24,6 +25,9 @@ public class MovieVO {
     private LocalDateTime updateTime;
     private Long userId;
     private String username;
+    
+    // 强制指定 JSON 字段名为 isFavorited，确保前端能正确接收
+    @JsonProperty("isFavorited")
     private Boolean isFavorited; // 是否被当前用户收藏
 
     public static MovieVO fromMovie(Movie movie) {

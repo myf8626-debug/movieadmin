@@ -27,17 +27,23 @@ public class FavoriteService {
     private MovieRepository movieRepository;
 
     public boolean toggleFavorite(Long movieId, String username) {
+        System.out.println("FavoriteService.toggleFavorite - username: " + username + ", movieId: " + movieId);
+        
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
+        System.out.println("FavoriteService.toggleFavorite - 用户ID: " + user.getId());
 
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("电影不存在"));
+        System.out.println("FavoriteService.toggleFavorite - 电影ID: " + movie.getId());
 
         Optional<Favorite> existingFavorite = favoriteRepository.findByUserIdAndMovieId(user.getId(), movieId);
+        System.out.println("FavoriteService.toggleFavorite - 是否已收藏: " + existingFavorite.isPresent());
 
         if (existingFavorite.isPresent()) {
             // 已收藏，取消收藏
             favoriteRepository.delete(existingFavorite.get());
+            System.out.println("FavoriteService.toggleFavorite - 执行删除收藏操作");
             return false;
         } else {
             // 未收藏，添加收藏
@@ -45,6 +51,7 @@ public class FavoriteService {
             favorite.setUser(user);
             favorite.setMovie(movie);
             favoriteRepository.save(favorite);
+            System.out.println("FavoriteService.toggleFavorite - 执行添加收藏操作，新记录ID: " + favorite.getId());
             return true;
         }
     }

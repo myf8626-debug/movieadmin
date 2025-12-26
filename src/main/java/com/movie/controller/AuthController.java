@@ -20,15 +20,26 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
         System.out.println("=== 收到登录请求 ===");
-        System.out.println("请求体: username=" + request.getUsername() + ", password=" + request.getPassword());
+        System.out.println("请求体: username=" + request.getUsername() + ", password=" + (request.getPassword() != null ? "***" : "null"));
         try {
-            Map<String, Object> result = userService.login(request.getUsername(), request.getPassword());
+            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+                return ApiResponse.error("用户名不能为空");
+            }
+            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ApiResponse.error("密码不能为空");
+            }
+            
+            Map<String, Object> result = userService.login(request.getUsername().trim(), request.getPassword());
             System.out.println("登录成功，返回结果");
             return ApiResponse.success("登录成功", result);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.err.println("登录异常: " + e.getMessage());
             e.printStackTrace();
             return ApiResponse.error(e.getMessage());
+        } catch (Exception e) {
+            System.err.println("登录系统异常: " + e.getMessage());
+            e.printStackTrace();
+            return ApiResponse.error("登录失败，请稍后重试");
         }
     }
 

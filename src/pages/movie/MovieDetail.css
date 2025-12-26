@@ -1,0 +1,44 @@
+.movie-detail-container {
+  padding: 20px;
+}
+
+.movie-info {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.movie-cover {
+  flex: 0 0 300px;
+}
+
+.movie-cover img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  max-height: 500px;
+}
+
+.movie-cover img:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s;
+}
+
+.movie-details {
+  flex: 1;
+  min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .movie-info {
+    flex-direction: column;
+  }
+  
+  .movie-cover {
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+}
+

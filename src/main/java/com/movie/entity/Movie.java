@@ -1,5 +1,6 @@
 package com.movie.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class Movie {
     @Column(length = 500)
     private String videoUrl;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Column(name = "release_date")
     private LocalDate releaseDate;
 

@@ -16,6 +16,10 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        // 添加Range头支持，用于视频流播放
+        config.addExposedHeader("Content-Range");
+        config.addExposedHeader("Accept-Ranges");
+        config.addExposedHeader("Content-Length");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

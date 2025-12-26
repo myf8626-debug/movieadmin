@@ -116,5 +116,40 @@
   padding: 0 24px;
 }
 
+/* 最近收藏预览区域 */
+.recent-favorites-scroll {
+  /* Webkit浏览器滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
+}
+
+.recent-favorites-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.recent-favorites-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.recent-favorites-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 4px;
+}
+
+.recent-favorites-scroll::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+.recent-favorites-scroll .ant-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.recent-favorites-scroll .ant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  border-color: #007AFF;
+}
+
 
 
